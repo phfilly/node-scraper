@@ -125,12 +125,47 @@ async function getIncredibleConnectionProducts(priceRange) {
     });
 }
 
+async function getWootWareProducts(priceRange) {
+    return rp(`https://www.wootware.co.za/pcs-and-laptops/laptops-notebooks/laptops-notebooks?${priceRange}`)
+    .then((html) => {
+        const list = [];
+        for (let i = 0; i < $('.category-products', html)[0].children.length; i++) {
+            const product = {
+                vendor: 'wootware',
+                price: 0,
+                oldPrice: 0,
+                isSpecial: false,
+                name: '',
+                image: '',
+                description: '',
+                link: '',
+                date: Date.now()
+            };
+
+            try {
+                product.name = $('.product-name a', html)[i].attribs.title;
+                product.link = $('.prolabel-wrapper a', html)[i].attribs['href'];
+                product.image = $('.prolabel-wrapper a img', html)[i].attribs['data-src'];
+                product.price = $('.price', html)[i].children[0].data;
+                product.price = product.price.substring(1, product.price.length);
+                list.push(product);
+            } catch (e) {
+                console.log('product not found');
+            }
+        }
+        return list;
+    }).catch(function(err) {
+        console.log('err', err);
+    });
+}
+
 
 module.exports = {
   getIncredibleConnectionProduct,
   getIncredibleConnectionProducts,
   getEveTechProduct,
-  getFNBLaptops
+  getFNBLaptops,
+  getWootWareProducts
 };
   
 

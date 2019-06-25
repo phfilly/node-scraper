@@ -69,7 +69,6 @@ async function getData(collection) {
 //     full_name: 'Grace Hopper',
 //   },
 // });
-console.log('done');
 
 module.exports = {
     init,
